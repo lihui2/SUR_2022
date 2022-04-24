@@ -1,5 +1,7 @@
 
 
+create_environment:
+	conda env create -f environment.yml
 
 download_dataset:
 	rm -rf dataset
@@ -23,8 +25,8 @@ download_dataset:
 	mv dataset/target_train/*.png	dataset/train/data_img/target/
 	mv dataset/non_target_train/*.wav dataset/train/data_sound/non_target
 	mv dataset/target_train/*.wav dataset/train/data_sound/target
-	rm -rf non_target_train/
-	rm -rf target_train/
-	rm -rf non_target_dev/
-	rm -rf target_dev/
+	rm -rf dataset/non_target_train/
+	rm -rf dataset/target_train/
+	rm -rf dataset/non_target_dev/
+	rm -rf dataset/target_dev/
 
