@@ -9,7 +9,7 @@ import glob
 import matplotlib.pyplot as plt
 from PIL import Image, ImageFile
 from torch.utils.data import Dataset
-from config import DATASET_TRAIN_PATH, TRANSFORMS_TRAIN
+from src.NN_img.config import DATASET_TRAIN_PATH, TRANSFORMS_TRAIN
 import torchvision.transforms as T
 transform = T.ToPILImage()
 

@@ -1,4 +1,3 @@
-from torch._C import device
 from config import DATASET_TEST_PATH, \
     DATASET_NUM_WORKERS, DATASET_TRAIN_PATH, \
     NUM_EPOCHS, \
@@ -19,8 +18,6 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import os
-
-
 
 
 def check_accuracy(loader: DataLoader, model: nn.Module, optimezer):
@@ -110,17 +107,17 @@ if __name__ == "__main__":
             optimezer.step()
             running_loss += loss.item()
 
-        print('EPOCH -> [%d] , loss: %.3f' % (epoch + 1, running_loss / NUM_EPOCHS))
+        print('EPOCH -> [%d] , loss: %.10f' % (epoch + 1, running_loss / NUM_EPOCHS))
 
         running_loss = 0.0
         if (epoch % 50 == 0 and epoch != 0):
             check_accuracy(test_dataloader, model, optimezer)
 
-
-    if SAVE_CHECK_POINT:
-        torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, str(epoch) + CHECK_POINT_NAME))
-
+            if SAVE_CHECK_POINT:
+                torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, CHECK_POINT_NAME))
 
     check_accuracy(test_dataloader, model, optimezer)
+    """
     if SAVE_CHECK_POINT:
         torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, CHECK_POINT_NAME))
+    """
