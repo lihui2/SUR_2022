@@ -36,22 +36,6 @@ def check_accuracy(loader: DataLoader, model: nn.Module, optimezer):
         # difference = abs(result[0][0] - y[0][0]).item()
         # losses.append( ( loss.item(), loss.item() < 0.5  ) )
         # differences.append( ( difference, difference < 0.5 ))
-    """    
-    num_of_correct = 0
-    num_of_samples = 0 
-    for tup in losses:
-        if tup[1] == True:
-            num_of_correct +=1
-        num_of_samples += 1
-    print("Accuraccy loss on  test dataloader is ", num_of_correct/num_of_samples, " from ",num_of_samples ," are correct ", num_of_correct, "." )
-    num_of_correct = 0
-    num_of_samples = 0 
-    for tup in differences:
-        if tup[1] == True:
-            num_of_correct +=1
-        num_of_samples += 1
-    print("Accuraccy diff on on test dataloader is ", num_of_correct/num_of_samples, " from ",num_of_samples ," are correct ", num_of_correct,  "." )
-    """
     loss_mean = 0
     for loss in losses:
         loss_mean += loss
@@ -88,11 +72,7 @@ if __name__ == "__main__":
     print("Model structure: ", model, "\n\n")
     optimezer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    """
-    for name, param in model.named_parameters():
-        print(
-            f"Layer: {name} | Size: {param.size()} | Values : {param[:2]} \n")
-    """
+
     running_loss = 0.0
 
     for epoch in range(NUM_EPOCHS):
@@ -107,7 +87,7 @@ if __name__ == "__main__":
             optimezer.step()
             running_loss += loss.item()
 
-        print('EPOCH -> [%d] , loss: %.10f' % (epoch + 1, running_loss / NUM_EPOCHS))
+        print('EPOCH -> [%d] , loss: %.4f' % (epoch + 1, running_loss / NUM_EPOCHS))
 
         running_loss = 0.0
         if (epoch % 50 == 0 and epoch != 0):
@@ -116,8 +96,7 @@ if __name__ == "__main__":
             if SAVE_CHECK_POINT:
                 torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, CHECK_POINT_NAME))
 
+        if SAVE_CHECK_POINT:
+            torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, CHECK_POINT_NAME))
+
     check_accuracy(test_dataloader, model, optimezer)
-    """
-    if SAVE_CHECK_POINT:
-        torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, CHECK_POINT_NAME))
-    """

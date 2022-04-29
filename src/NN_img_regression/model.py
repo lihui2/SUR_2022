@@ -2,8 +2,8 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from src.NN_img.config import TRANSFORMS_TRAIN, TRANSFORMS_TEST, DATASET_TRAIN_PATH, BATCH_SIZE, DATASET_NUM_WORKERS
-from src.NN_img.dataset import ID_Dataset
+from src.NN_img_regression.config import TRANSFORMS_TRAIN, TRANSFORMS_TEST, DATASET_TRAIN_PATH, BATCH_SIZE, DATASET_NUM_WORKERS
+from src.NN_img_regression.dataset import ID_Dataset
 
 
 class CNN(nn.Module):
@@ -36,6 +36,7 @@ class CNN(nn.Module):
         x = self.cnn_layers(x)
         x = x.reshape(x.shape[0], -1)
         x = self.fc1(x)
+        #x = nn.Sigmoid()(x)
         return x
 
 
