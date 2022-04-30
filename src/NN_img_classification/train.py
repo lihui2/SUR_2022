@@ -1,4 +1,4 @@
-from src.NN_img_classification.config import DATASET_TEST_PATH, \
+from NN_img_classification.config import DATASET_TEST_PATH, \
     DATASET_NUM_WORKERS, DATASET_TRAIN_PATH, \
     NUM_EPOCHS, \
     DEVICE, \
@@ -12,12 +12,12 @@ from src.NN_img_classification.config import DATASET_TEST_PATH, \
     TRANSFORMS_TRAIN, \
     TRANSFORMS_TEST
 import matplotlib.pyplot as plt
-from dataset import ID_Dataset_train,ID_Dataset_test
+from dataset import ID_Dataset_train, ID_Dataset_test
 from model import CNN
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-import os
+import os, pickle
 
 
 def check_accuracy(loader: DataLoader, model: nn.Module, optimezer):
@@ -50,37 +50,19 @@ def check_accuracy(loader: DataLoader, model: nn.Module, optimezer):
             if t_a < t_b:
                 num_of_correct += 1
             else:
-                miss +=1
+                miss += 1
         num_of_samples += 1
 
         losses.append(loss.item())
-        # difference = abs(result[0][0] - y[0][0]).item()
-        # losses.append( ( loss.item(), loss.item() < 0.5  ) )
-        # differences.append( ( difference, difference < 0.5 ))
-    """    
-    num_of_correct = 0
-    num_of_samples = 0 
-    for tup in losses:
-        if tup[1] == True:
-            num_of_correct +=1
-        num_of_samples += 1
-    print("Accuraccy loss on  test dataloader is ", num_of_correct/num_of_samples, " from ",num_of_samples ," are correct ", num_of_correct, "." )
-    num_of_correct = 0
-    num_of_samples = 0 
-    for tup in differences:
-        if tup[1] == True:
-            num_of_correct +=1
-        num_of_samples += 1
-    print("Accuraccy diff on on test dataloader is ", num_of_correct/num_of_samples, " from ",num_of_samples ," are correct ", num_of_correct,  "." )
-    """
+
     loss_mean = 0
     for loss in losses:
         loss_mean += loss
     loss_mean = loss_mean / len(losses)
 
-    #print("Accuraccy  loss_mean on on test dataloader is ", loss_mean)
-    print("Correct predictions is ", num_of_correct , "from ", num_of_samples," ",num_of_correct/num_of_samples,"%" )
-    print("False alarm", false_alaram,"Miss", miss)
+    # print("Accuraccy  loss_mean on on test dataloader is ", loss_mean)
+    print("Correct predictions is ", num_of_correct, "from ", num_of_samples, " ", num_of_correct / num_of_samples, "%")
+    print("False alarm", false_alaram, "Miss", miss)
     model.train()
     return num_of_correct, num_of_samples, false_alaram, miss
 
@@ -93,7 +75,7 @@ if __name__ == "__main__":
     print("NUM_EPOCHS = ", NUM_EPOCHS)
     print("Loading dataset")
 
-    training_data = ID_Dataset_train(DATASET_TRAIN_PATH, transforms=TRANSFORMS_TEST)
+    training_data = ID_Dataset_train(DATASET_TRAIN_PATH, transforms=TRANSFORMS_TRAIN)
     test_data = ID_Dataset_test(DATASET_TEST_PATH, transforms=TRANSFORMS_TEST)
     print("Dataset loaded")
 
@@ -110,17 +92,11 @@ if __name__ == "__main__":
         model.eval()
 
     print("Model structure: ", model, "\n\n")
-    optimezer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
-
-    """
-    for name, param in model.named_parameters():
-        print(
-            f"Layer: {name} | Size: {param.size()} | Values : {param[:2]} \n")
-    """
+    optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     running_loss = 0.0
     num_of_correct_array = []
     num_of_samples_array = []
-    false_alarams = []
+    false_alarms = []
     misses = []
     epochs = []
     for epoch in range(NUM_EPOCHS):
@@ -130,49 +106,62 @@ if __name__ == "__main__":
             scores = model(data)
             loss = loss_fn(scores, targets)
 
-            optimezer.zero_grad()
+            optimizer.zero_grad()
             loss.backward()
-            optimezer.step()
+            optimizer.step()
             running_loss += loss.item()
 
         print('EPOCH -> [%d] , loss: %.10f' % (epoch + 1, running_loss / NUM_EPOCHS))
 
         running_loss = 0.0
-        if (epoch % 20 == 0 ):
-            num_of_correct, num_of_samples, false_alaram, miss = check_accuracy(test_dataloader, model, optimezer)
+        if (epoch % 20 == 0):
+            num_of_correct, num_of_samples, false_alaram, miss = check_accuracy(test_dataloader, model, optimizer)
             num_of_correct_array.append(num_of_correct)
             num_of_samples_array.append(num_of_samples)
-            false_alarams.append(false_alaram)
+            false_alarms.append(false_alaram)
             misses.append(miss)
             epochs.append(epoch)
 
             if SAVE_CHECK_POINT:
-                torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, str(epoch)+".".join(CHECK_POINT_NAME.split("."))))
+                torch.save(model.state_dict(),
+                           os.path.join(CHECK_POINT_PATH, str(epoch) + ".".join(CHECK_POINT_NAME.split("."))))
 
-    num_of_correct, num_of_samples, false_alaram, miss  = check_accuracy(test_dataloader, model, optimezer)
+    num_of_correct, num_of_samples, false_alaram, miss = check_accuracy(test_dataloader, model, optimizer)
     num_of_correct_array.append(num_of_correct)
     num_of_samples_array.append(num_of_samples)
-    false_alarams.append(false_alaram)
+    false_alarms.append(false_alaram)
     misses.append(miss)
     epochs.append(NUM_EPOCHS)
     if SAVE_CHECK_POINT:
-        torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, str(epoch)+".".join(CHECK_POINT_NAME.split("."))))
+        torch.save(model.state_dict(),
+                   os.path.join(CHECK_POINT_PATH, str(epoch) + ".".join(CHECK_POINT_NAME.split("."))))
 
     fig, axs = plt.subplots(2, 1)
-    correctness = axs[0].plot(epochs, [num_of_correct_array[x]/num_of_samples_array[0] for x in range(len(num_of_correct_array))])
-    axs[0].legend(['num_of_correct/num_of_samples'],shadow=True, fancybox=True)
+    correctness = axs[0].plot(epochs, [num_of_correct_array[x] / num_of_samples_array[0] for x in
+                                       range(len(num_of_correct_array))])
+    axs[0].legend(['num_of_correct/num_of_samples'], shadow=True, fancybox=True)
 
-    #axs[0].set_xlim(0, 2)
+    # axs[0].set_xlim(0, 2)
     axs[0].set_xlabel('epochs')
     axs[0].set_ylabel('Correct %')
 
-    false_alarams_l,misses_l = axs[1].plot(epochs, false_alarams, epochs,misses)
+    false_alarms_l, misses_l = axs[1].plot(epochs, false_alarms, epochs, misses)
     axs[1].set_ylabel('Count')
     axs[1].set_xlabel('epochs')
-    axs[1].legend((false_alarams_l, misses_l), ('false_alarms','misses'),shadow=True, fancybox=True)
+    axs[1].legend((false_alarms_l, misses_l), ('false_alarms', 'misses'), shadow=True, fancybox=True)
     fig.tight_layout()
     plt.savefig('training.png')
     plt.show()
+
+    training_data = {
+        "num_of_correct_array": num_of_correct_array,
+        "num_of_samples_array": num_of_samples_array,
+        "false_alarms": false_alarms,
+        "misses": misses,
+        "epochs": epochs,
+    }
+    with open('training_data.pickle', 'wb') as f:
+        pickle.dump(training_data, f)
     """
     if SAVE_CHECK_POINT:
         torch.save(model.state_dict(), os.path.join(CHECK_POINT_PATH, CHECK_POINT_NAME))

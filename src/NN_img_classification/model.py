@@ -1,9 +1,7 @@
-import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
-from src.NN_img_classification.config import TRANSFORMS_TRAIN, TRANSFORMS_TEST, DATASET_TRAIN_PATH, BATCH_SIZE, DATASET_NUM_WORKERS
-from src.NN_img_classification.dataset import ID_Dataset_train
+from NN_img_classification.config import TRANSFORMS_TRAIN, DATASET_TRAIN_PATH, BATCH_SIZE, DATASET_NUM_WORKERS
+from NN_img_classification.dataset import ID_Dataset_train
 
 
 class CNN(nn.Module):

@@ -9,11 +9,11 @@ from src.NN_img_regression.dataset import ID_Dataset
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    test_data = ID_Dataset(os.path.join("dataset", "dev", "data_img"), transforms=TRANSFORMS_TEST)
+    test_data = ID_Dataset(os.path.join("../../dataset", "dev", "data_img"), transforms=TRANSFORMS_TEST)
     test_dataloader = DataLoader(test_data, batch_size=1, shuffle=True, num_workers=1)
 
     model = CNN().to(DEVICE)
-    model.load_state_dict(torch.load(os.path.join("src", "NN_img", CHECK_POINT_PATH, "model_img.pth")))
+    model.load_state_dict(torch.load(os.path.join("..", "NN_img", CHECK_POINT_PATH, "model_img.pth")))
     model.eval()
     results = []
     for i in range(50):

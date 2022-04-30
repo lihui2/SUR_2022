@@ -1,9 +1,17 @@
 
 
 create_environment:
-	conda env create -f environment.yml
 
-download_dataset:
+load_environment:
+
+
+
+eval_nn:
+	python3
+
+
+
+download_dataset_CNN:
 	rm -rf dataset
 	mkdir -p dataset/train/
 	mkdir -p dataset/dev/
@@ -29,4 +37,6 @@ download_dataset:
 	rm -rf dataset/target_train/
 	rm -rf dataset/non_target_dev/
 	rm -rf dataset/target_dev/
+
+
 

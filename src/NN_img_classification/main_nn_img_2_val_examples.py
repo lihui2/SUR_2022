@@ -1,21 +1,19 @@
 # This is a sample Python script.
 import torch, os
-import numpy as np
 from torch.utils.data import DataLoader
-from src.NN_img_classification.model import CNN
+from NN_img_classification.model import CNN
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from src.NN_img_classification.config import DATASET_TEST_PATH, DEVICE, CHECK_POINT_PATH, CHECK_POINT_NAME, TRANSFORMS_TEST
-from src.NN_img_classification.dataset import ID_Dataset_train
+from NN_img_classification.config import DEVICE, CHECK_POINT_PATH, TRANSFORMS_TEST
+from NN_img_classification.dataset import ID_Dataset_test
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    test_data = ID_Dataset_train(os.path.join("dataset", "dev", "data_img"), transforms=TRANSFORMS_TEST)
+    test_data = ID_Dataset_test(os.path.join("../../dataset", "dev", "data_img"), transforms=TRANSFORMS_TEST)
     test_dataloader = DataLoader(test_data, batch_size=1, shuffle=True, num_workers=1)
 
     model = CNN().to(DEVICE)
-    model.load_state_dict(torch.load(os.path.join("src", "NN_img_2", CHECK_POINT_PATH, "model_img.pth")))
+    model.load_state_dict(torch.load(os.path.join("..", "NN_img_classification", CHECK_POINT_PATH, "900model_img.pth")))
     model.eval()
     results = []
     for i in range(50):
@@ -41,6 +39,7 @@ if __name__ == '__main__':
                 scores = ["{:1.3f}".format(score) for score in scores[0]]
                 targets = ["{:1.3f}".format(target) for target in targets[0]]
                 title = ' '.join(scores) + "\n" + ' '.join(targets)
+                #title = ' '.join(targets)
                 ax.ravel()[ind].set_title(title)
                 ax.ravel()[ind].set_axis_off()
 
