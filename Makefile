@@ -1,14 +1,7 @@
 
 
 create_environment:
-
-load_environment:
-
-
-
-eval_nn:
-	python3
-
+	conda env create -f environment.yml
 
 
 download_dataset_CNN:
@@ -39,4 +32,11 @@ download_dataset_CNN:
 	rm -rf dataset/target_dev/
 
 
+train_nn:
+	cd src/NN_img_classification/ && python3 train.py
 
+make_eval:
+	cd src/NN_img_classification/ && python3 eval_final_data_NN_classifications.py
+
+make_graphs:
+	cd src/NN_img_classification/ && python3 graphs.py

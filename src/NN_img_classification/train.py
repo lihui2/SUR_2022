@@ -1,4 +1,4 @@
-from NN_img_classification.config import DATASET_TEST_PATH, \
+from config import DATASET_TEST_PATH, \
     DATASET_NUM_WORKERS, DATASET_TRAIN_PATH, \
     NUM_EPOCHS, \
     DEVICE, \

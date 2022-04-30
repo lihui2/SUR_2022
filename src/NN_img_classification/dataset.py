@@ -5,7 +5,7 @@ import torch
 import glob
 from PIL import Image
 from torch.utils.data import Dataset
-from NN_img_classification.config import DATASET_TRAIN_PATH, TRANSFORMS_TRAIN,TARGET_MULTIPLY
+from config import DATASET_TRAIN_PATH, TRANSFORMS_TRAIN,TARGET_MULTIPLY
 import torchvision.transforms as T
 transform = T.ToPILImage()
 

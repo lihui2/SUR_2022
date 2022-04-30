@@ -1,11 +1,11 @@
 # This is a sample Python script.
 import torch, os
 from torch.utils.data import DataLoader
-from NN_img_classification.model import CNN
+from model import CNN
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-from NN_img_classification.config import DEVICE, CHECK_POINT_PATH, TRANSFORMS_TEST
-from NN_img_classification.dataset import ID_Dataset_test
+from config import DEVICE, CHECK_POINT_PATH, TRANSFORMS_TEST
+from dataset import ID_Dataset_test
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
