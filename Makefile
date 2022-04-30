@@ -32,6 +32,9 @@ download_dataset_CNN:
 	rm -rf dataset/target_dev/
 
 
+
+
+
 train_nn:
 	cd src/NN_img_classification/ && python3 train.py
 
@@ -40,3 +43,15 @@ make_eval:
 
 make_graphs:
 	cd src/NN_img_classification/ && python3 graphs.py
+
+train_gmm:
+	cd src/GMM_sound/ && python3 audio_GMM_train.py  ../../SUR_projekt2021-2022/target_train/ ../../SUR_projekt2021-2022/non_target_train/
+
+eval_gmm:
+	cd src/GMM_sound/ && python3 audio_GMM_eval.py ../../eval/
+
+mix_val:
+	cd src/MIXED/ && python3 mix_val.py
+
+mix_eval:
+	cd src/MIXED/ && python3 mix_eval.py

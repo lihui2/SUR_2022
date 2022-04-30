@@ -1,1 +1,0 @@
-export PYTHONPATH="${PYTHONPATH}:/PycharmProjects/SUR_2022"
