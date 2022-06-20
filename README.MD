@@ -26,3 +26,5 @@ make mix_eval
 ```
 
 The results are in folder called **results_eval**. For more information there is a documentations in folder **doc**.
+
+![](imgs/validation_result_example.png)
