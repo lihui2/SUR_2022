@@ -1,4 +1,5 @@
 # SUR 2022
+Check documentation in doc folder! :)
 
 Requirements :
 
